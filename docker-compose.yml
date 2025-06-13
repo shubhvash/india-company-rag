@@ -1,0 +1,162 @@
+services:
+  # Vector Database - Qdrant
+  qdrant:
+    image: qdrant/qdrant:v1.7.0
+    container_name: qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__HTTP_PORT=6333
+      - QDRANT__SERVICE__GRPC_PORT=6334
+    networks:
+      - rag_network
+    restart: unless-stopped
+
+  # Text Search Engine - Elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - rag_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Monitoring Database - PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_DB: monitoring
+      POSTGRES_USER: raguser
+      POSTGRES_PASSWORD: ragpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - rag_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U raguser -d monitoring"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Monitoring Dashboard - Grafana
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    networks:
+      - rag_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # FastAPI Backend
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag_api
+    environment:
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - POSTGRES_URL=postgresql://raguser:ragpassword@postgres:5432/monitoring
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app:ro
+      - ./dataset:/app/dataset:ro
+    networks:
+      - rag_network
+    depends_on:
+      qdrant:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Streamlit Frontend
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    container_name: rag_streamlit
+    environment:
+      - API_URL=http://api:8000
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./app:/app/app:ro
+    networks:
+      - rag_network
+    depends_on:
+      - api
+    restart: unless-stopped
+    command: streamlit run app/streamlit_app.py --server.address 0.0.0.0 --server.port 8501
+
+  # Data Ingestion Service (runs once)
+  ingestion:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag_ingestion
+    environment:
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    volumes:
+      - ./dataset:/app/dataset:ro
+      - ./scripts:/app/scripts:ro
+    networks:
+      - rag_network
+    depends_on:
+      qdrant:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
+    profiles:
+      - ingestion
+    command: python scripts/ingest_data.py --dataset-dir dataset
+
+volumes:
+  qdrant_data:
+  elasticsearch_data:
+  postgres_data:
+  grafana_data:
+
+networks:
+  rag_network:
+    driver: bridge

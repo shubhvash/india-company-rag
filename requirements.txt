@@ -1,0 +1,49 @@
+# Core Framework
+fastapi==0.104.1
+uvicorn==0.24.0
+streamlit==1.33.0
+
+# Database Clients
+qdrant-client==1.11.3
+elasticsearch==8.11.0
+psycopg[binary]==3.1.18
+sqlalchemy==2.0.23
+asyncpg==0.30.0
+
+# ML & Embeddings
+sentence-transformers==2.6.1
+torch==2.7.1
+transformers==4.39.3
+numpy>=1.26,<2.0
+scikit-learn==1.4.1.post1
+huggingface-hub>=0.19.3,<1.0
+
+# GPU Acceleration (optional)
+# For CUDA support: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+# For Metal (Mac): torch with MPS support is included above
+
+# Google Gemini
+google-generativeai==0.3.2
+
+# Data Processing
+pandas==2.2.2
+python-multipart==0.0.6
+plotly==5.17.0
+
+# Utilities
+python-dotenv==1.0.0
+pydantic==2.5.0
+httpx==0.25.2
+tqdm==4.66.1
+
+# Monitoring & Logging
+prometheus-client==0.19.0
+structlog==23.2.0
+
+# Document Processing
+pypdf==3.17.1
+python-docx==1.1.0
+
+# Evaluation
+rouge-score==0.1.2
+bert-score==0.3.13
