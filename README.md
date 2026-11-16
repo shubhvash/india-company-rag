@@ -39,6 +39,24 @@ Each record contains:
 - Industry classification (NIC codes, business categories)
 - Corporate status and listing information
 
+### Getting the Data
+The dataset CSVs are **not included in this repository** (they total ~500 MB and several files exceed GitHub's 100 MB limit).
+
+1. Download the state-wise company master data CSVs from the Open Government Data Platform India: [data.gov.in](https://www.data.gov.in) (search for "Company Master Data").
+2. Place them in the `dataset/` folder, named by state in lowercase, e.g.:
+   ```
+   dataset/delhi.csv
+   dataset/karnataka.csv
+   dataset/uttar pradesh.csv
+   dataset/maharashtra.csv
+   dataset/telangana.csv
+   dataset/andhra pradesh.csv
+   ```
+3. Each CSV should have this header:
+   ```
+   CIN,CompanyName,CompanyROCcode,CompanyCategory,CompanySubCategory,CompanyClass,AuthorizedCapital,PaidupCapital,CompanyRegistrationdate_date,Registered_Office_Address,Listingstatus,CompanyStatus,CompanyStateCode,CompanyIndian/Foreign Company,nic_code,CompanyIndustrialClassification
+   ```
+
 ## Architecture
 
 ### Core Components
@@ -87,8 +105,10 @@ Each record contains:
 ### Installation
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/shubhvash/llm-zoomcamp-project-2025.git
 cd llm-zoomcamp-project-2025
+
+# Download the dataset CSVs into dataset/ (see "Getting the Data" above)
 
 # Start all services
 docker-compose up -d
