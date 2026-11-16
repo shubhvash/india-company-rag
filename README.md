@@ -105,8 +105,8 @@ The dataset CSVs are **not included in this repository** (they total ~500 MB and
 ### Installation
 ```bash
 # Clone the repository
-git clone https://github.com/shubhvash/llm-zoomcamp-project-2025.git
-cd llm-zoomcamp-project-2025
+git clone https://github.com/shubhvash/india-company-rag.git
+cd india-company-rag
 
 # Download the dataset CSVs into dataset/ (see "Getting the Data" above)
 

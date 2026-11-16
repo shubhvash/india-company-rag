@@ -16,7 +16,7 @@ This guide provides step-by-step instructions to set up and run the complete RAG
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd llm-zoomcamp-project-2025
+cd india-company-rag
 
 # Copy environment configuration
 cp .env.example .env

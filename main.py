@@ -1,5 +1,5 @@
 def main():
-    print("Hello from llm-zoomcamp-project-2025!")
+    print("Hello from india-company-rag!")
 
 
 if __name__ == "__main__":
