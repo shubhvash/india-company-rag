@@ -15,7 +15,7 @@ This guide provides step-by-step instructions to set up and run the complete RAG
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/shubhvash/india-company-rag.git
 cd india-company-rag
 
 # Copy environment configuration
