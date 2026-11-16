@@ -11,6 +11,15 @@ from app.core.retrieval import RetrievalSystem
 
 logger = logging.getLogger(__name__)
 
+
+def _response_text(response) -> str:
+    """Join the text parts of a Gemini response (newer models return multi-part replies)."""
+    try:
+        parts = response.candidates[0].content.parts
+    except (AttributeError, IndexError):
+        return ""
+    return "".join(getattr(p, "text", "") or "" for p in parts)
+
 class RAGSystem:
     """RAG system with multiple prompt strategies for evaluation"""
     
@@ -33,7 +42,7 @@ class RAGSystem:
                 raise ValueError("GOOGLE_API_KEY environment variable not set")
             
             genai.configure(api_key=api_key)
-            self.model = genai.GenerativeModel('gemini-1.5-flash')
+            self.model = genai.GenerativeModel(os.getenv('GEMINI_MODEL', 'gemini-flash-lite-latest'))
             
             logger.info("Google Gemini initialized successfully")
             
@@ -148,9 +157,9 @@ Details: {doc.full_text}
             # Generate response using Gemini
             response = self.model.generate_content(formatted_prompt)
             
-            if response.text:
+            if _response_text(response):
                 logger.info(f"Generated response using {prompt_type} prompt")
-                return response.text.strip()
+                return _response_text(response).strip()
             else:
                 logger.warning("Empty response from Gemini")
                 return "I apologize, but I couldn't generate a response for your query."
@@ -225,7 +234,7 @@ class QueryRewriter:
                 raise ValueError("GOOGLE_API_KEY environment variable not set")
             
             genai.configure(api_key=api_key)
-            self.model = genai.GenerativeModel('gemini-1.5-flash')
+            self.model = genai.GenerativeModel(os.getenv('GEMINI_MODEL', 'gemini-flash-lite-latest'))
             
         except Exception as e:
             logger.error(f"Failed to initialize query rewriter: {e}")
@@ -247,9 +256,9 @@ Generate 3 alternative queries (one per line):
             
             response = self.model.generate_content(rewrite_prompt)
             
-            if response.text:
+            if _response_text(response):
                 # Parse the response to extract alternative queries
-                alternatives = [line.strip() for line in response.text.strip().split('\n') 
+                alternatives = [line.strip() for line in _response_text(response).strip().split('\n') 
                               if line.strip() and not line.strip().startswith('#')]
                 
                 # Include original query
@@ -279,7 +288,7 @@ class DocumentReRanker:
                 raise ValueError("GOOGLE_API_KEY environment variable not set")
             
             genai.configure(api_key=api_key)
-            self.model = genai.GenerativeModel('gemini-1.5-flash')
+            self.model = genai.GenerativeModel(os.getenv('GEMINI_MODEL', 'gemini-flash-lite-latest'))
             
         except Exception as e:
             logger.error(f"Failed to initialize document re-ranker: {e}")
@@ -311,9 +320,9 @@ Provide only the ranking as numbers separated by commas (e.g., 3,1,5,2,4):
             
             response = self.model.generate_content(ranking_prompt)
             
-            if response.text:
+            if _response_text(response):
                 # Parse ranking
-                ranking_text = response.text.strip()
+                ranking_text = _response_text(response).strip()
                 try:
                     rankings = [int(x.strip()) - 1 for x in ranking_text.split(',')]
                     
