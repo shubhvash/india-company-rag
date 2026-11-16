@@ -1,5 +1,13 @@
 # Indian Company Intelligence RAG System
 
+## Screenshots
+
+<img width="1709" height="1032" alt="Screenshot 2026-11-16 at 9 38 45 AM" src="https://github.com/user-attachments/assets/4fb62f29-4827-4e47-b556-0be221f5efb0" />
+
+<img width="1710" height="1026" alt="Screenshot 2026-11-16 at 9 38 57 AM" src="https://github.com/user-attachments/assets/3cd80dfe-4394-49e3-adfb-05d073ffc59d" />
+
+<img width="1707" height="1032" alt="Screenshot 2026-11-16 at 9 43 38 AM" src="https://github.com/user-attachments/assets/a720e279-4e4f-44e5-9946-0a97ab386088" />
+
 ## Problem Description
 
 ### The Challenge
