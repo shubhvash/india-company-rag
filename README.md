@@ -1,5 +1,7 @@
 # Indian Company Intelligence RAG System
 
+I built this project to make India's company registration data searchable in plain English. You can ask a question about companies, industries or regions and get an answer grounded in the actual records.
+
 ## Screenshots
 
 <img width="1709" height="1032" alt="Screenshot 2026-11-16 at 9 38 45 AM" src="https://github.com/user-attachments/assets/4fb62f29-4827-4e47-b556-0be221f5efb0" />
@@ -11,34 +13,35 @@
 ## Problem Description
 
 ### The Challenge
-With over 2.5 million registered companies across India, finding relevant business information quickly and accurately is a significant challenge for:
+India has over 2.5 million registered companies. While working with this data, I found it hard to get relevant business information quickly and accurately. The same problem affects:
 - **Investors** seeking investment opportunities in specific sectors or regions
 - **Business analysts** researching market trends and competitor landscapes
 - **Government officials** monitoring corporate compliance and industry growth
 - **Entrepreneurs** identifying potential partners or understanding market dynamics
 
-Traditional search methods require manual filtering through massive datasets, making it time-consuming to extract actionable insights about Indian businesses.
+With traditional search, I had to filter massive datasets by hand, and pulling useful insights about Indian businesses took far too long.
 
-### Our Solution
-This RAG (Retrieval-Augmented Generation) system transforms how users interact with Indian company data by:
-- Enabling natural language queries about companies, industries, and business trends
-- Combining semantic search with keyword matching for comprehensive results
-- Providing AI-generated insights with cited sources from the knowledge base
-- Supporting complex analytical questions about regional business patterns
+### My Solution
+I built a RAG (Retrieval-Augmented Generation) system that changes how you work with Indian company data. It:
+- Lets you ask natural language questions about companies, industries and business trends
+- Combines semantic search with keyword matching for more complete results
+- Gives AI-generated insights that cite their sources in the knowledge base
+- Handles complex analytical questions about regional business patterns
 
 ### Key Features
+These are the main features I implemented:
 - **Multi-modal Search**: Vector similarity + Elasticsearch text search + hybrid approaches
 - **Smart Query Processing**: Query rewriting and document re-ranking
 - **Real-time Analytics**: Comprehensive monitoring and user feedback collection
 - **Scalable Architecture**: Containerized microservices with automated ingestion
 
 ## Dataset Overview
-The system processes company registration data from Indian states (currently Delhi, Karnataka, Uttar Pradesh with support for expansion):
+I used company registration data from Indian states. I started with Delhi, Karnataka and Uttar Pradesh and designed the system so more states can be added:
 - **Delhi**: Manufacturing, services, and trading sectors
 - **Karnataka**: Technology and trading focus
 - **Uttar Pradesh**: Business services and consulting
 
-**Extensible Design**: The ingestion pipeline supports adding data from additional states as CSV files are added to the dataset folder.
+**Extensible Design**: I built the ingestion pipeline so that adding a state is as simple as dropping its CSV file into the dataset folder.
 
 Each record contains:
 - Company identification (CIN, name, ROC code)
@@ -48,7 +51,7 @@ Each record contains:
 - Corporate status and listing information
 
 ### Getting the Data
-The dataset CSVs are **not included in this repository** (they total ~500 MB and several files exceed GitHub's 100 MB limit).
+I haven't included the dataset CSVs in this repository. Together they are about 500 MB, and several files exceed GitHub's 100 MB limit. To get them:
 
 1. Download the state-wise company master data CSVs from the Open Government Data Platform India: [data.gov.in](https://www.data.gov.in) (search for "Company Master Data").
 2. Place them in the `dataset/` folder, named by state in lowercase, e.g.:
@@ -68,6 +71,7 @@ The dataset CSVs are **not included in this repository** (they total ~500 MB and
 ## Architecture
 
 ### Core Components
+This is how I put the pieces together:
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Streamlit UI  │    │   FastAPI       │    │   Ingestion     │
@@ -94,6 +98,7 @@ The dataset CSVs are **not included in this repository** (they total ~500 MB and
 ```
 
 ### Tech Stack
+I chose the following tools:
 - **Vector Database**: Qdrant for semantic similarity search
 - **Text Search**: Elasticsearch for keyword and fuzzy matching
 - **API Framework**: FastAPI with async support
@@ -141,6 +146,7 @@ POSTGRES_URL=postgresql://user:password@postgres:5432/monitoring
 ```
 
 ## Usage Examples
+Here are some queries I ran and the kind of answers the system gives:
 
 ### Basic Company Search
 ```
@@ -163,11 +169,11 @@ Response: Uttar Pradesh shows higher concentration in business services (75% of 
 ## Data Ingestion
 
 ### Adding New State Data
-To add company data from additional states:
+To add company data from another state:
 1. Place new CSV file in `dataset/` folder (e.g., `maharashtra.csv`)
 2. Ensure CSV follows the same schema as existing files
 3. Run ingestion script: `python scripts/ingest_data.py`
-4. The system automatically processes all CSV files in the dataset folder
+4. The script processes every CSV file in the dataset folder automatically
 
 ### Supported Data Format
 CSV files must contain these columns:
@@ -177,6 +183,7 @@ CSV files must contain these columns:
 - nic_code, CompanyIndustrialClassification
 
 ## Evaluation Results
+I evaluated each retrieval method and prompt strategy. These are my results:
 
 ### Retrieval Performance
 - **Vector Search**: Precision@5: 0.87, Recall@5: 0.82
@@ -191,6 +198,7 @@ CSV files must contain these columns:
 ## Monitoring & Analytics
 
 ### Grafana Dashboards
+I set up Grafana dashboards to track:
 - Query volume and response time trends
 - User satisfaction scores and feedback analysis
 - Retrieval method performance comparison
@@ -198,6 +206,7 @@ CSV files must contain these columns:
 - Search result relevance scoring
 
 ### Key Metrics
+These are the metrics I measured:
 - Average response time: <2 seconds
 - User satisfaction: 4.2/5.0
 - System uptime: 99.5%
@@ -206,6 +215,7 @@ CSV files must contain these columns:
 ## Development
 
 ### Local Setup
+To run the app outside Docker during development, I use:
 ```bash
 # Install dependencies
 pip install -r requirements.txt
@@ -240,6 +250,7 @@ streamlit run app/streamlit_app.py
 ```
 
 ## Contributing
+I welcome contributions. To contribute:
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
