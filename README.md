@@ -4,11 +4,11 @@ I built this project to make India's company registration data searchable in pla
 
 ## Screenshots
 
-<img width="1709" height="1032" alt="Screenshot 2026-11-16 at 9 38 45 AM" src="https://github.com/user-attachments/assets/4fb62f29-4827-4e47-b556-0be221f5efb0" />
+<img width="1700" height="1018" alt="Screenshot 2026-11-16 at 10 58 58 PM" src="https://github.com/user-attachments/assets/b53bd8af-ece8-4599-9e64-76e86737b589" />
 
-<img width="1710" height="1026" alt="Screenshot 2026-11-16 at 9 38 57 AM" src="https://github.com/user-attachments/assets/3cd80dfe-4394-49e3-adfb-05d073ffc59d" />
+<img width="1700" height="1031" alt="Screenshot 2026-11-16 at 10 59 11 PM" src="https://github.com/user-attachments/assets/78cc478c-09f2-425a-9f87-14fe756ab4a8" />
 
-<img width="1707" height="1032" alt="Screenshot 2026-11-16 at 9 43 38 AM" src="https://github.com/user-attachments/assets/a720e279-4e4f-44e5-9946-0a97ab386088" />
+<img width="1710" height="1037" alt="Screenshot 2026-11-16 at 10 59 40 PM" src="https://github.com/user-attachments/assets/7b9ebfbc-4f40-4675-b961-b4f35d9e9295" />
 
 ## Problem Description
 
